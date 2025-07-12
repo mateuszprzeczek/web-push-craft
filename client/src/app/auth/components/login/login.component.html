@@ -1,0 +1,30 @@
+@if (loading()) {
+  <div class="d-flex justify-content-center align-items-center" style="height: 300px">
+    <mat-progress-spinner mode="indeterminate" diameter="48" color="accent"></mat-progress-spinner>
+  </div>
+} @else {
+  <div class="container d-flex flex-column align-items-center justify-content-center">
+    <h2 class="text-light mb-4">Login</h2>
+
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <mat-form-field class="w-100" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email">
+      </mat-form-field>
+
+      <mat-form-field class="w-100" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password">
+      </mat-form-field>
+    </form>
+
+    <div class="d-flex gap-2 mt-3">
+      <button mat-flat-button color="primary" (click)="login()">Login</button>
+      <button mat-stroked-button color="accent" [routerLink]="['/register']">Register</button>
+    </div>
+
+    <div class="mt-4">
+      <button mat-button color="warn" [routerLink]="['/']">Back</button>
+    </div>
+  </div>
+}

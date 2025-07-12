@@ -1,23 +1,65 @@
-<mat-toolbar color="primary">
-  <span>Web Push Dashboard</span>
-</mat-toolbar>
+<mat-card class="dashboard-card p-3">
+  <mat-card-title class="fs-3 mb-4">📊 Web Push Summary</mat-card-title>
 
-<div style="padding: 24px;">
-  <mat-card>
-    <mat-card-title>Subscribers</mat-card-title>
-    <canvas baseChart
-            [data]="subscriberChartData"
-            [options]="chartOptions"
-            [type]="'bar'">
-    </canvas>
-  </mat-card>
+  @if (dashboardService.stats()) {
+    <div class="row g-3 mb-5">
+      <div class="col-md-4">
+        <mat-card class="p-4 bg-dark text-white rounded shadow-sm text-center">
+          <div class="fs-1 fw-bold">{{ dashboardService.stats()?.summary?.totalSubscriptions ?? '-' }}</div>
+          <div class="fs-6 mt-1">📬 Subscriptions</div>
+        </mat-card>
+      </div>
 
-  <mat-card style="margin-top: 24px;">
-    <mat-card-title>Sent Messages</mat-card-title>
-    <canvas baseChart
-            [data]="messageChartData"
-            [options]="chartOptions"
-            [type]="'line'">
-    </canvas>
-  </mat-card>
-</div>
+      <div class="col-md-4">
+        <mat-card class="p-4 bg-dark text-white rounded shadow-sm text-center">
+          <div class="fs-1 fw-bold">{{ dashboardService.stats()?.summary?.totalClicks ?? '-' }}</div>
+          <div class="fs-6 mt-1">🖱️ Clicks</div>
+        </mat-card>
+      </div>
+
+      <div class="col-md-4">
+        <mat-card class="p-4 bg-dark text-white rounded shadow-sm text-center">
+          <div class="fs-1 fw-bold">{{ dashboardService.stats()?.summary?.totalDisplays ?? '-' }}</div>
+          <div class="fs-6 mt-1">📢 Displays</div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <mat-card-title class="fs-5 mb-3">📈 Subscriptions (last 7 days)</mat-card-title>
+        <canvas baseChart
+                type="bar"
+                [data]="subscriptionChartData()"
+                [labels]="chartLabels()"
+                [options]="barChartOptions"
+                [legend]="barChartLegend">
+        </canvas>
+      </div>
+
+      <div class="chart-card">
+        <mat-card-title class="fs-5 mb-3">🖱️ Clicks (last 7 days)</mat-card-title>
+        <canvas baseChart
+                type="bar"
+                [data]="clicksChartData()"
+                [labels]="chartLabels()"
+                [options]="barChartOptions"
+                [legend]="barChartLegend">
+        </canvas>
+      </div>
+
+      <div class="chart-card">
+        <mat-card-title class="fs-5 mb-3">📢 Displays (last 7 days)</mat-card-title>
+        <canvas baseChart
+                type="bar"
+                [data]="displaysChartData()"
+                [labels]="chartLabels()"
+                [options]="barChartOptions"
+                [legend]="barChartLegend">
+        </canvas>
+      </div>
+    </div>
+  } @else {
+    <p class="loading">Loading dashboard data…</p>
+  }
+</mat-card>

@@ -1,0 +1,18 @@
+.footer {
+  border-top: 1px solid #444;
+  font-size: 0.9rem;
+
+  .footer-logo {
+    height: 100%;
+    max-height: 60px;
+    object-fit: contain;
+  }
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

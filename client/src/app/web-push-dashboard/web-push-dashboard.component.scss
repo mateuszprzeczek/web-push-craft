@@ -1,0 +1,19 @@
+.charts-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .chart-card {
+    mat-card-title {
+      margin-bottom: 0.5rem;
+    }
+
+    canvas {
+      max-height: 250px;
+    }
+  }
+}

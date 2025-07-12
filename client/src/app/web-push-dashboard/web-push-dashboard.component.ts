@@ -1,45 +1,106 @@
-import {Component, OnInit} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {ChartConfiguration, ChartType} from 'chart.js';
-import {NgChartsModule} from 'ng2-charts';
-import {CommonModule} from '@angular/common';
-import {MatCard, MatCardTitle} from "@angular/material/card";
-import {MatToolbar} from "@angular/material/toolbar";
+import {Component, computed, effect, inject, OnInit} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BaseChartDirective } from 'ng2-charts';
+import { MatCardModule } from '@angular/material/card';
+import {ChartConfiguration, ChartData, ChartType} from 'chart.js';
+import {WebPushDashboardService} from "./services/web-push-dashboard.service";
+import {RestService} from "./services/rest.service";
+import {
+  Chart,
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title
+} from 'chart.js';
+
+Chart.register(
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title
+);
 
 @Component({
-    selector: 'app-web-push-dashboard',
-    imports: [NgChartsModule, CommonModule, MatCard, MatCardTitle, MatToolbar],
-    templateUrl: './web-push-dashboard.component.html',
-    styleUrl: './web-push-dashboard.component.scss'
+  selector: 'app-web-push-dashboard',
+  standalone: true,
+  imports: [CommonModule, MatCardModule, BaseChartDirective],
+  providers: [WebPushDashboardService, RestService],
+  templateUrl: './web-push-dashboard.component.html',
+  styleUrl: './web-push-dashboard.component.scss'
 })
 export class WebPushDashboardComponent implements OnInit {
-  subscriberChartData: ChartConfiguration<'bar'>['data'] = {labels: [], datasets: []};
-  messageChartData: ChartConfiguration<'line'>['data'] = {labels: [], datasets: []};
+  dashboardService = inject(WebPushDashboardService);
 
-  chartOptions: ChartConfiguration<'bar'>['options'] = {
+  chartLabels = () => this.dashboardService.stats()?.summary?.subscriptions?.labels ?? [];
+  barChartOptions = {
     responsive: true,
-    plugins: {legend: {display: true}},
+    scales: {
+      x: {
+        ticks: {color: '#ccc'},
+        grid: {color: '#444'}
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {color: '#ccc'},
+        grid: {color: '#444'}
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: '#fff'
+        }
+      }
+    }
   };
 
-  constructor(private http: HttpClient) {
-  }
+  barChartLegend = true;
 
   ngOnInit() {
-    this.http.get<any>('http://localhost:3000/stats')
-      .subscribe(data => {
-        this.subscriberChartData = {
-          labels: data.labels,
-          datasets: [
-            {data: data.subscribers, label: 'Subskrypcje', backgroundColor: 'rgba(0,123,255,0.5)'},
-          ]
-        };
+    const isDemo = true; // TODO: podepnij faktyczne rozróżnienie konta
+    const uid = isDemo ? 'demo' : 'actual-uid-from-auth';
 
-        this.messageChartData = {
-          labels: data.labels,
-          datasets: [
-            {data: data.sentMessages, label: 'Wysłane wiadomości', borderColor: 'rgba(40,167,69,1)', fill: false},
-          ]
-        };
-      });
+    void this.dashboardService.loadStats(uid);
+  }
+
+
+  subscriptionChartData = () => ({
+    labels: this.chartLabels(),
+    datasets: [
+      {
+        data: this.dashboardService.stats()?.summary?.subscriptions?.data ?? [],
+        label: 'Subscriptions',
+        backgroundColor: '#42A5F5',
+      }
+    ]
+  });
+
+  clicksChartData = () => ({
+    labels: this.chartLabels(),
+    datasets: [
+      {
+        data: this.dashboardService.stats()?.summary?.clicks?.data ?? [],
+        label: 'Clicks',
+        backgroundColor: '#66BB6A',
+      }
+    ]
+  });
+
+  displaysChartData(): ChartData<'bar'> {
+    return {
+      labels: this.dashboardService.stats()?.summary?.displays?.labels ?? [],
+      datasets: [
+        {
+          data: this.dashboardService.stats()?.summary?.displays?.data ?? [],
+          label: 'Displays',
+        }
+      ]
+    };
   }
 }

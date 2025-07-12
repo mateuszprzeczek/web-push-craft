@@ -9,15 +9,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import {} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { routes } from './app.routes';
+import {AuthService} from "./auth/services/auth.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimationsAsync(),
+    AuthService,
     importProvidersFrom(
       MatCardModule,
       MatToolbarModule,
@@ -25,8 +27,11 @@ export const appConfig: ApplicationConfig = {
       MatButtonModule,
       MatFormFieldModule,
       MatInputModule,
-      HttpClientModule,
-      FormsModule
-    )
+      FormsModule,
+    ),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withFetch()
+    ),
   ]
 };
