@@ -7,11 +7,10 @@ import {MatCard, MatCardTitle} from "@angular/material/card";
 import {MatToolbar} from "@angular/material/toolbar";
 
 @Component({
-  selector: 'app-web-push-dashboard',
-  standalone: true,
-  imports: [NgChartsModule, CommonModule, MatCard, MatCardTitle, MatToolbar],
-  templateUrl: './web-push-dashboard.component.html',
-  styleUrl: './web-push-dashboard.component.scss',
+    selector: 'app-web-push-dashboard',
+    imports: [NgChartsModule, CommonModule, MatCard, MatCardTitle, MatToolbar],
+    templateUrl: './web-push-dashboard.component.html',
+    styleUrl: './web-push-dashboard.component.scss'
 })
 export class WebPushDashboardComponent implements OnInit {
   subscriberChartData: ChartConfiguration<'bar'>['data'] = {labels: [], datasets: []};
