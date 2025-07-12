@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+  <span>Web Push Dashboard</span>
+</mat-toolbar>
+
+<div style="padding: 24px;">
+  <mat-card>
+    <mat-card-title>Subscribers</mat-card-title>
+    <canvas baseChart
+            [data]="subscriberChartData"
+            [options]="chartOptions"
+            [type]="'bar'">
+    </canvas>
+  </mat-card>
+
+  <mat-card style="margin-top: 24px;">
+    <mat-card-title>Sent Messages</mat-card-title>
+    <canvas baseChart
+            [data]="messageChartData"
+            [options]="chartOptions"
+            [type]="'line'">
+    </canvas>
+  </mat-card>
+</div>
