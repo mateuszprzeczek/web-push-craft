@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {ChartConfiguration, ChartType} from 'chart.js';
 import {NgChartsModule} from 'ng2-charts';
 import {CommonModule} from '@angular/common';

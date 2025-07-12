@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import { HttpClientModule } from '@angular/common/http';
+import {} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { routes } from './app.routes';
