@@ -1,0 +1,1 @@
+Tutaj umieścisz Angulara (ng new client)
