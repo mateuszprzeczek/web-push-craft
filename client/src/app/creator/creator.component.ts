@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,10 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase.init';
 import { v4 as uuidv4 } from 'uuid';
+import { PushNotification, NotificationAction } from './model/interfaces/push-notification.interface';
+import { AuthService } from '../auth/services/auth.service';
 
 @Component({
   selector: 'app-creator',
@@ -26,23 +29,29 @@ import { v4 as uuidv4 } from 'uuid';
     MatFormFieldModule,
     MatCardModule,
     MatSnackBarModule,
+    MatTooltipModule,
     TranslateModule
   ],
+  providers: [AuthService],
   templateUrl: './creator.component.html',
   styleUrls: ['./creator.component.scss']
 })
-export class CreatorComponent {
+export class CreatorComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
+  private authService = inject(AuthService);
 
   templateForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
     title: ['', [Validators.required]],
     body: ['', [Validators.required]],
     icon: [''],
-    actionUrl: [''],
+    btn1Title: [''],
+    btn1Url: [''],
+    btn2Title: [''],
+    btn2Url: [''],
     badge: [''],
     image: [''],
     tag: ['']
@@ -51,6 +60,10 @@ export class CreatorComponent {
   isSubmitting = false;
   isDraggingIcon = false;
   isDraggingImage = false;
+
+  // Track if buttons are visible
+  isButton1Visible = false;
+  isButton2Visible = false;
 
   // Handle drag events for icon
   onDragOverIcon(event: DragEvent) {
@@ -123,13 +136,43 @@ export class CreatorComponent {
 
     try {
       const templateId = uuidv4();
-      const templateData = {
-        id: templateId,
-        ...this.templateForm.value,
-        createdAt: new Date().toISOString()
+      const formValues = this.templateForm.value;
+
+      // Create notification data according to PushNotification interface
+      const pushNotification: PushNotification = {
+        title: formValues.title,
+        options: {
+          body: formValues.body,
+          icon: formValues.icon,
+          ...(formValues.image ? { image: formValues.image } : {}),
+          requireInteraction: true,
+          data: {
+            pushId: Date.now(),
+            targetUrl: formValues.btn1Url || '',
+            templateId: templateId,
+            webPushMessageIntId: Math.floor(Math.random() * 1000000),
+            ...this.getActionsField(formValues)
+          }
+        },
+        createdAt: new Date().toISOString(),
+        createdBy: this.authService.userUid() || 'unknown',
+        status: 'draft',
+        siteId: this.authService.userUid() || 'unknown'
       };
 
-      await setDoc(doc(firestore, 'templates', templateId), templateData);
+      // Add template name separately as it's not part of the PushNotification interface
+      const templateData = {
+        id: templateId,
+        name: formValues.name,
+        ...pushNotification
+      };
+
+      const uid = this.authService.userUid();
+
+      console.log('this.authService.userUid()', this.authService.userUid())
+      if (!uid) throw new Error('No UID found');
+
+      await setDoc(doc(firestore, 'users', uid, 'templates', templateId), templateData);
 
       this.snackBar.open(
         this.translate.instant('creator.saveSuccess'),
@@ -150,6 +193,33 @@ export class CreatorComponent {
     }
   }
 
+  private createActionsArray(formValues: any): Array<NotificationAction> | undefined {
+    const actions: Array<NotificationAction> = [];
+
+    if (formValues.btn1Title && formValues.btn1Url) {
+      actions.push({
+        action: 'BTN1',
+        title: formValues.btn1Title,
+        url: formValues.btn1Url
+      });
+    }
+
+    if (formValues.btn2Title && formValues.btn2Url) {
+      actions.push({
+        action: 'BTN2',
+        title: formValues.btn2Title,
+        url: formValues.btn2Url
+      });
+    }
+
+    return actions.length > 0 ? actions : undefined;
+  }
+
+  private getActionsField(formValues: any): { actions: Array<NotificationAction> } | {} {
+    const actions = this.createActionsArray(formValues);
+    return actions ? { actions } : {};
+  }
+
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -158,5 +228,40 @@ export class CreatorComponent {
         this.markFormGroupTouched(control as FormGroup);
       }
     });
+  }
+
+  // Methods to handle adding and removing buttons
+  addButton1() {
+    this.isButton1Visible = true;
+  }
+
+  removeButton1() {
+    this.isButton1Visible = false;
+    this.templateForm.get('btn1Title')?.setValue('');
+    this.templateForm.get('btn1Url')?.setValue('');
+  }
+
+  addButton2() {
+    this.isButton2Visible = true;
+  }
+
+  removeButton2() {
+    this.isButton2Visible = false;
+    this.templateForm.get('btn2Title')?.setValue('');
+    this.templateForm.get('btn2Url')?.setValue('');
+  }
+
+  // Check if buttons have values to determine visibility on component initialization
+  ngOnInit() {
+    const btn1Title = this.templateForm.get('btn1Title')?.value;
+    const btn1Url = this.templateForm.get('btn1Url')?.value;
+    const btn2Title = this.templateForm.get('btn2Title')?.value;
+    const btn2Url = this.templateForm.get('btn2Url')?.value;
+
+    this.isButton1Visible = !!(btn1Title || btn1Url);
+    this.isButton2Visible = !!(btn2Title || btn2Url);
+
+    // Log the userUid to confirm it's working
+    console.log('ngOnInit - this.authService.userUid():', this.authService.userUid());
   }
 }

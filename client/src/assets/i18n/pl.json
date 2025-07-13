@@ -1,4 +1,24 @@
 {
+  "webPushDashboard": {
+    "summary": "📊 Podsumowanie Web Push",
+    "subscriptions": "📬 Subskrypcje",
+    "clicks": "🖱️ Kliknięcia",
+    "displays": "📢 Wyświetlenia",
+    "subscriptionsChart": "📈 Subskrypcje (ostatnie 7 dni)",
+    "clicksChart": "🖱️ Kliknięcia (ostatnie 7 dni)",
+    "displaysChart": "📢 Wyświetlenia (ostatnie 7 dni)",
+    "loading": "Ładowanie danych panelu…",
+    "errors": {
+      "statsNotFound": "Nie znaleziono statystyk dla użytkownika: {{uid}}",
+      "loadingStats": "Błąd podczas ładowania statystyk panelu"
+    },
+    "emptyState": {
+      "message": "Dla danego konta nie znaleziono statystyk",
+      "createTemplateButtonText": "Utwórz nowy szablon powiadomienia",
+      "configureMessage": "Jeśli jeszcze nie skonfigurowałeś swojej domeny kliknij:",
+      "getStartedButtonText": "Jak zacząć"
+    }
+  },
   "sidenav": {
     "dashboard": "Panel",
     "templates": "Lista szablonów",
@@ -10,7 +30,40 @@
   "templates": {
     "title": "Lista szablonów",
     "coming_soon": "Lista szablonów będzie dostępna wkrótce.",
-    "createNew": "Utwórz nowy"
+    "createNew": "Utwórz nowy",
+    "send": "Wyślij",
+    "emptyState": {
+      "message": "Nie utworzono jeszcze żadnych szablonów.",
+      "buttonText": "Utwórz pierwszy szablon"
+    },
+    "errors": {
+      "userNotLoggedIn": "Użytkownik nie jest zalogowany",
+      "loadingTemplates": "Błąd podczas ładowania szablonów"
+    }
+  },
+  "send": {
+    "title": "Wyślij powiadomienie",
+    "preview": "Podgląd powiadomienia",
+    "sendNow": "Wyślij teraz",
+    "schedule": "Zaplanuj wysyłkę",
+    "scheduledTime": "Zaplanowany czas",
+    "selectDate": "Wybierz datę i godzinę",
+    "send": "Wyślij",
+    "cancel": "Anuluj",
+    "backToTemplates": "Powrót do szablonów",
+    "success": "Powiadomienie zostało wysłane pomyślnie",
+    "scheduled": "Powiadomienie zostało zaplanowane pomyślnie",
+    "error": "Błąd podczas wysyłania powiadomienia",
+    "subscribers": {
+      "count": "Subskrybenci: {{count}}",
+      "recalculate": "Przelicz ponownie",
+      "calculating": "Obliczanie...",
+      "zero": "Nie znaleziono subskrybentów"
+    },
+    "errors": {
+      "noSubscribers": "Nie znaleziono subskrybentów. Dodaj skrypt Web Push Craft do swojej strony, aby uzyskać subskrybentów.",
+      "sendingFailed": "Nie udało się wysłać powiadomienia. Spróbuj ponownie."
+    }
   },
   "dashboard": {
     "createNew": "Utwórz nowy"
@@ -25,6 +78,8 @@
       "name": "Nazwa szablonu",
       "nameRequired": "Nazwa szablonu jest wymagana",
       "notificationDetails": "Szczegóły powiadomienia",
+      "notificationButtons": "Przyciski powiadomienia",
+      "additionalOptions": "Dodatkowe opcje",
       "title": "Tytuł powiadomienia",
       "titleRequired": "Tytuł powiadomienia jest wymagany",
       "body": "Treść powiadomienia",
@@ -32,8 +87,18 @@
       "icon": "URL ikony",
       "iconHint": "URL do ikony powiadomienia",
       "dropIconHere": "Upuść ikonę tutaj",
-      "actionUrl": "URL akcji",
-      "actionUrlHint": "URL do otwarcia po kliknięciu w powiadomienie",
+      "button1Label": "Przycisk 1",
+      "button2Label": "Przycisk 2",
+      "btn1Title": "Tekst przycisku 1",
+      "btn1TitleHint": "Tekst wyświetlany na pierwszym przycisku",
+      "btn1Url": "URL przycisku 1",
+      "btn1UrlHint": "URL do otwarcia po kliknięciu w pierwszy przycisk",
+      "btn2Title": "Tekst przycisku 2",
+      "btn2TitleHint": "Tekst wyświetlany na drugim przycisku",
+      "btn2Url": "URL przycisku 2",
+      "btn2UrlHint": "URL do otwarcia po kliknięciu w drugi przycisk",
+      "addButton": "Dodaj przycisk",
+      "removeButton": "Usuń przycisk",
       "badge": "URL odznaki",
       "badgeHint": "URL do odznaki powiadomienia",
       "image": "URL obrazu",

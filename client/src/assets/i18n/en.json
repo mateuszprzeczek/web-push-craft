@@ -1,4 +1,24 @@
 {
+  "webPushDashboard": {
+    "summary": "📊 Web Push Summary",
+    "subscriptions": "📬 Subscriptions",
+    "clicks": "🖱️ Clicks",
+    "displays": "📢 Displays",
+    "subscriptionsChart": "📈 Subscriptions (last 7 days)",
+    "clicksChart": "🖱️ Clicks (last 7 days)",
+    "displaysChart": "📢 Displays (last 7 days)",
+    "loading": "Loading dashboard data…",
+    "errors": {
+      "statsNotFound": "Stats not found for user: {{uid}}",
+      "loadingStats": "Error loading dashboard stats"
+    },
+    "emptyState": {
+      "message": "No statistics found for this account",
+      "createTemplateButtonText": "Create new notification template",
+      "configureMessage": "If you haven't configured your domain yet, click:",
+      "getStartedButtonText": "How to start"
+    }
+  },
   "sidenav": {
     "dashboard": "Dashboard",
     "templates": "Templates",
@@ -10,7 +30,40 @@
   "templates": {
     "title": "Templates",
     "coming_soon": "Templates will be available soon.",
-    "createNew": "Create New"
+    "createNew": "Create New",
+    "send": "Send",
+    "emptyState": {
+      "message": "You haven't created any templates yet.",
+      "buttonText": "Create First Template"
+    },
+    "errors": {
+      "userNotLoggedIn": "User not logged in",
+      "loadingTemplates": "Error loading templates"
+    }
+  },
+  "send": {
+    "title": "Send Notification",
+    "preview": "Notification Preview",
+    "sendNow": "Send Now",
+    "schedule": "Schedule",
+    "scheduledTime": "Scheduled Time",
+    "selectDate": "Select Date and Time",
+    "send": "Send",
+    "cancel": "Cancel",
+    "backToTemplates": "Back to Templates",
+    "success": "Notification sent successfully",
+    "scheduled": "Notification scheduled successfully",
+    "error": "Error sending notification",
+    "subscribers": {
+      "count": "Subscribers: {{count}}",
+      "recalculate": "Recalculate",
+      "calculating": "Calculating...",
+      "zero": "No subscribers found"
+    },
+    "errors": {
+      "noSubscribers": "No subscribers found. Add the Web Push Craft script to your website to get subscribers.",
+      "sendingFailed": "Failed to send notification. Please try again."
+    }
   },
   "dashboard": {
     "createNew": "Create New"
@@ -25,6 +78,8 @@
       "name": "Template Name",
       "nameRequired": "Template name is required",
       "notificationDetails": "Notification Details",
+      "notificationButtons": "Notification Buttons",
+      "additionalOptions": "Additional Options",
       "title": "Notification Title",
       "titleRequired": "Notification title is required",
       "body": "Notification Message",
@@ -32,8 +87,18 @@
       "icon": "Icon URL",
       "iconHint": "URL to the notification icon",
       "dropIconHere": "Drop icon image here",
-      "actionUrl": "Action URL",
-      "actionUrlHint": "URL to open when notification is clicked",
+      "button1Label": "Button 1",
+      "button2Label": "Button 2",
+      "btn1Title": "Button 1 Text",
+      "btn1TitleHint": "Text to display on the first button",
+      "btn1Url": "Button 1 URL",
+      "btn1UrlHint": "URL to open when the first button is clicked",
+      "btn2Title": "Button 2 Text",
+      "btn2TitleHint": "Text to display on the second button",
+      "btn2Url": "Button 2 URL",
+      "btn2UrlHint": "URL to open when the second button is clicked",
+      "addButton": "Add button",
+      "removeButton": "Remove button",
       "badge": "Badge URL",
       "badgeHint": "URL to the notification badge",
       "image": "Image URL",

@@ -31,6 +31,7 @@ export async function initPush() {
         }
 
         const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        await navigator.serviceWorker.ready;
 
         const token = await getToken(messaging, {
             vapidKey: "BEbsGQfYDyf9EhFlEznPUA_DXDWLEyPDWhF4QM-mftgegicG88bWPcSmvVWUEiInQLwaUHzw24J8ffj8Yj6jr9Y",
@@ -50,10 +51,18 @@ export async function initPush() {
             { merge: true }
         );
 
+        await setDoc(doc(firestore, 'users', uuid, 'tokens', token), {
+            token,
+            createdAt: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+        });
+
+        console.log("Token zapisany do Firestore:", token);
         console.log("Subscription recorded for UUID:", uuid, "Token:", token);
     } catch (err) {
         console.error("Push registration error:", err);
     }
+
 }
 
 async function updateStat(uuid: string, field: string) {

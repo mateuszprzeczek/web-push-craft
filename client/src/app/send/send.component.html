@@ -1,0 +1,115 @@
+<div class="send-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">{{ 'send.title' | translate }}</h1>
+    <a routerLink="/templates" class="btn btn-outline-secondary">
+      <mat-icon class="me-1">arrow_back</mat-icon>
+      {{ 'send.backToTemplates' | translate }}
+    </a>
+  </div>
+
+  @if (isLoading) {
+    <div class="text-center p-5">
+      <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+      <p>{{ 'templates.errors.loadingTemplates' | translate }}</p>
+    </div>
+  } @else if (!template) {
+    <div class="text-center p-5">
+      <mat-icon class="error-icon">error</mat-icon>
+      <p>{{ 'templates.errors.loadingTemplates' | translate }}</p>
+      <a routerLink="/templates" class="btn btn-primary mt-3">
+        {{ 'send.backToTemplates' | translate }}
+      </a>
+    </div>
+  } @else {
+    <div class="row">
+      <!-- Left side - Send options -->
+      <div class="col-md-6">
+        <mat-card class="send-options-card">
+          <mat-card-content>
+            <form [formGroup]="sendForm" (ngSubmit)="sendNotification()">
+              <h3 class="mb-3">{{ 'send.title' | translate }}</h3>
+
+              <!-- Subscriber count section -->
+              <div class="subscriber-count-section mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    @if (isLoadingSubscribers) {
+                      <span>{{ 'send.subscribers.calculating' | translate }}</span>
+                    } @else if (subscriberCount === 0) {
+                      <span class="text-danger">{{ 'send.subscribers.zero' | translate }}</span>
+                    } @else {
+                      <span>{{ 'send.subscribers.count' | translate: { count: subscriberCount } }}</span>
+                    }
+                  </div>
+                  <button type="button" mat-stroked-button color="primary" (click)="recalculateSubscriberCount()" [disabled]="isLoadingSubscribers">
+                    <mat-icon class="me-1">refresh</mat-icon>
+                    {{ 'send.subscribers.recalculate' | translate }}
+                  </button>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <mat-radio-group formControlName="sendType" class="d-flex flex-column gap-3">
+                  <mat-radio-button value="now">{{ 'send.sendNow' | translate }}</mat-radio-button>
+                  <mat-radio-button value="schedule">{{ 'send.schedule' | translate }}</mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+              @if (showDatePicker) {
+                <div class="mb-4">
+                  <h4>{{ 'send.scheduledTime' | translate }}</h4>
+                  <mat-form-field class="w-100">
+                    <mat-label>{{ 'send.selectDate' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="scheduledTime">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              }
+
+              <div class="d-flex justify-content-end mt-4">
+                <button type="button" mat-button routerLink="/templates" class="me-2">
+                  {{ 'send.cancel' | translate }}
+                </button>
+                <button type="submit" mat-raised-button color="primary" [disabled]="isSubmitting || (showDatePicker && !sendForm.get('scheduledTime')?.value) || subscriberCount === 0">
+                  <mat-icon class="me-1">send</mat-icon>
+                  {{ 'send.send' | translate }}
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Right side - Notification preview -->
+      <div class="col-md-6">
+        <mat-card class="preview-card">
+          <mat-card-header>
+            <mat-card-title>{{ 'send.preview' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="notification-preview">
+              <div class="notification-header">
+                @if (template.options.icon) {
+                  <img [src]="template.options.icon" alt="Icon" class="notification-icon">
+                }
+                <div class="notification-title">{{ template.title }}</div>
+              </div>
+              <div class="notification-body">{{ template.options.body }}</div>
+              @if (template.options.image) {
+                <img [src]="template.options.image" alt="Image" class="notification-image">
+              }
+              @if (template.options.data?.actions?.length) {
+                <div class="notification-actions">
+                  @for (action of template.options.data.actions; track action.action) {
+                    <button class="notification-action-button">{{ action.title }}</button>
+                  }
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+</div>

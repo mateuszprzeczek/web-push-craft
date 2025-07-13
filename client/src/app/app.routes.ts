@@ -21,6 +21,18 @@ export const routes: Routes = [
       import('./creator/creator.component').then(m => m.CreatorComponent),
   },
   {
+    path: 'send/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./send/send.component').then(m => m.SendComponent),
+  },
+  {
+    path: 'send',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./send/send.component').then(m => m.SendComponent),
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./auth/components/login/login.component').then(m => m.LoginComponent),

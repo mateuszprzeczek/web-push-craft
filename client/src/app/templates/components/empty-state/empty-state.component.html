@@ -1,0 +1,12 @@
+<div class="empty-state-container">
+  <div class="empty-state-content">
+    <div class="empty-state-icon">
+      <mat-icon>note_add</mat-icon>
+    </div>
+    <h3 class="empty-state-message">{{ message | translate }}</h3>
+    <a [routerLink]="buttonLink" class="btn btn-primary">
+      <mat-icon class="me-1">{{ icon }}</mat-icon>
+      {{ buttonText | translate }}
+    </a>
+  </div>
+</div>

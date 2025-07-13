@@ -4,10 +4,12 @@ import { RouterLink } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {ChartConfiguration, ChartData, ChartType} from 'chart.js';
 import {WebPushDashboardService} from "./services/web-push-dashboard.service";
 import {RestService} from "./services/rest.service";
+import {AuthService} from "../auth/services/auth.service";
+import {EmptyStateComponent} from "../templates/components/empty-state/empty-state.component";
 import {
   Chart,
   BarController,
@@ -32,13 +34,15 @@ Chart.register(
 @Component({
   selector: 'app-web-push-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatCardModule, MatIconModule, BaseChartDirective, TranslateModule],
-  providers: [WebPushDashboardService, RestService],
+  imports: [CommonModule, RouterLink, MatCardModule, MatIconModule, BaseChartDirective, TranslateModule, EmptyStateComponent],
+  providers: [WebPushDashboardService, RestService, AuthService],
   templateUrl: './web-push-dashboard.component.html',
   styleUrl: './web-push-dashboard.component.scss'
 })
 export class WebPushDashboardComponent implements OnInit {
   dashboardService = inject(WebPushDashboardService);
+  translate = inject(TranslateService);
+  authService = inject(AuthService);
 
   chartLabels = () => this.dashboardService.stats()?.summary?.subscriptions?.labels ?? [];
   barChartOptions = {
@@ -66,10 +70,15 @@ export class WebPushDashboardComponent implements OnInit {
   barChartLegend = true;
 
   ngOnInit() {
-    const isDemo = true; // TODO: podepnij faktyczne rozróżnienie konta
-    const uid = isDemo ? 'demo' : 'actual-uid-from-auth';
+    const uid = this.authService.userUid();
+    console.log('WebPushDashboardComponent - ngOnInit - User UID:', uid);
 
-    void this.dashboardService.loadStats(uid);
+    if (uid) {
+      console.log('WebPushDashboardComponent - Loading stats for UID:', uid);
+      void this.dashboardService.loadStats(uid);
+    } else {
+      console.error('User not logged in or UUID not available');
+    }
   }
 
 
@@ -78,7 +87,7 @@ export class WebPushDashboardComponent implements OnInit {
     datasets: [
       {
         data: this.dashboardService.stats()?.summary?.subscriptions?.data ?? [],
-        label: 'Subscriptions',
+        label: this.translate.instant('webPushDashboard.subscriptions'),
         backgroundColor: '#42A5F5',
       }
     ]
@@ -89,7 +98,7 @@ export class WebPushDashboardComponent implements OnInit {
     datasets: [
       {
         data: this.dashboardService.stats()?.summary?.clicks?.data ?? [],
-        label: 'Clicks',
+        label: this.translate.instant('webPushDashboard.clicks'),
         backgroundColor: '#66BB6A',
       }
     ]
@@ -101,7 +110,7 @@ export class WebPushDashboardComponent implements OnInit {
       datasets: [
         {
           data: this.dashboardService.stats()?.summary?.displays?.data ?? [],
-          label: 'Displays',
+          label: this.translate.instant('webPushDashboard.displays'),
         }
       ]
     };

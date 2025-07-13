@@ -16,9 +16,11 @@
           <mat-form-field class="w-100">
             <mat-label>{{ 'creator.form.name' | translate }}</mat-label>
             <input matInput formControlName="name" required>
-            <mat-error *ngIf="templateForm.get('name')?.hasError('required')">
-              {{ 'creator.form.nameRequired' | translate }}
-            </mat-error>
+            @if (templateForm.get('name')?.hasError('required')) {
+              <mat-error>
+                {{ 'creator.form.nameRequired' | translate }}
+              </mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
@@ -30,9 +32,11 @@
           <mat-form-field class="w-100">
             <mat-label>{{ 'creator.form.title' | translate }}</mat-label>
             <input matInput formControlName="title" required>
-            <mat-error *ngIf="templateForm.get('title')?.hasError('required')">
-              {{ 'creator.form.titleRequired' | translate }}
-            </mat-error>
+            @if (templateForm.get('title')?.hasError('required')) {
+              <mat-error>
+                {{ 'creator.form.titleRequired' | translate }}
+              </mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -61,22 +65,86 @@
           <mat-form-field class="w-100">
             <mat-label>{{ 'creator.form.body' | translate }}</mat-label>
             <textarea matInput formControlName="body" rows="3" required></textarea>
-            <mat-error *ngIf="templateForm.get('body')?.hasError('required')">
-              {{ 'creator.form.bodyRequired' | translate }}
-            </mat-error>
+            @if (templateForm.get('body')?.hasError('required')) {
+              <mat-error>
+                {{ 'creator.form.bodyRequired' | translate }}
+              </mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <mat-form-field class="w-100">
-            <mat-label>{{ 'creator.form.actionUrl' | translate }}</mat-label>
-            <input matInput formControlName="actionUrl" placeholder="https://example.com/action">
-            <mat-hint>{{ 'creator.form.actionUrlHint' | translate }}</mat-hint>
-          </mat-form-field>
-        </div>
+      <h3 class="mt-4 mb-3">{{ 'creator.form.notificationButtons' | translate }}</h3>
 
+      @if (isButton1Visible) {
+        <div class="notification-button-group">
+          <div class="button-title-container">
+            <div class="button-title">{{ 'creator.form.button1Label' | translate }}</div>
+            <button type="button" class="remove-button" (click)="removeButton1()" matTooltip="{{ 'creator.form.removeButton' | translate }}">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <mat-form-field class="w-100">
+                <mat-label>{{ 'creator.form.btn1Title' | translate }}</mat-label>
+                <input matInput formControlName="btn1Title" placeholder="Click here">
+                <mat-hint>{{ 'creator.form.btn1TitleHint' | translate }}</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <mat-form-field class="w-100">
+                <mat-label>{{ 'creator.form.btn1Url' | translate }}</mat-label>
+                <input matInput formControlName="btn1Url" placeholder="https://example.com/action1">
+                <mat-hint>{{ 'creator.form.btn1UrlHint' | translate }}</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="add-button-container" (click)="addButton1()">
+          <mat-icon>add_circle</mat-icon>
+          <span>{{ 'creator.form.addButton' | translate }} 1</span>
+        </div>
+      }
+
+      @if (isButton2Visible) {
+        <div class="notification-button-group">
+          <div class="button-title-container">
+            <div class="button-title">{{ 'creator.form.button2Label' | translate }}</div>
+            <button type="button" class="remove-button" (click)="removeButton2()" matTooltip="{{ 'creator.form.removeButton' | translate }}">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <mat-form-field class="w-100">
+                <mat-label>{{ 'creator.form.btn2Title' | translate }}</mat-label>
+                <input matInput formControlName="btn2Title" placeholder="Learn more">
+                <mat-hint>{{ 'creator.form.btn2TitleHint' | translate }}</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <mat-form-field class="w-100">
+                <mat-label>{{ 'creator.form.btn2Url' | translate }}</mat-label>
+                <input matInput formControlName="btn2Url" placeholder="https://example.com/action2">
+                <mat-hint>{{ 'creator.form.btn2UrlHint' | translate }}</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="add-button-container" (click)="addButton2()">
+          <mat-icon>add_circle</mat-icon>
+          <span>{{ 'creator.form.addButton' | translate }} 2</span>
+        </div>
+      }
+
+      <h3 class="mt-4 mb-3">{{ 'creator.form.additionalOptions' | translate }}</h3>
+
+      <div class="row">
         <div class="col-md-6 mb-3">
           <mat-form-field class="w-100">
             <mat-label>{{ 'creator.form.badge' | translate }}</mat-label>
