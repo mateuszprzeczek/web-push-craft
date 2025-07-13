@@ -4,7 +4,11 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-sw": "node copy-sw.js",
+    "build-and-copy": "webpack && npm run copy-sw && firebase deploy",
+    "build": "webpack",
+    "buildProd": "webpack --mode production"
   },
   "keywords": [],
   "author": "",

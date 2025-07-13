@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ 'getStarted.title' | translate }}</h2>
+<mat-dialog-content>
+  <div class="get-started-content">
+    <p>{{ 'getStarted.description' | translate }}</p>
+
+    <div class="section">
+      <h3>{{ 'getStarted.step1.title' | translate }}</h3>
+      <p>{{ 'getStarted.step1.description' | translate }}</p>
+      <div class="code-block">
+        <code><span style="color: #000;">data-id="wb-craft" async src="https://web-push-craft.web.app/webpush.js" data-uuid="{{uid}}"></span></code>
+        <button mat-icon-button color="primary"
+                (click)="copyToClipboard()" matTooltip="{{ 'getStarted.copyScript' | translate }}">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>{{ 'getStarted.step2.title' | translate }}</h3>
+      <p>{{ 'getStarted.step2.description' | translate }}</p>
+      <div class="code-block">
+        <p class="text-black">{{ 'getStarted.step2.instruction' | translate }}</p>
+        <button mat-raised-button color="primary" (click)="downloadServiceWorker()">
+          <mat-icon>download</mat-icon>
+          {{ 'getStarted.downloadServiceWorker' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">{{ 'getStarted.close' | translate }}</button>
+</mat-dialog-actions>

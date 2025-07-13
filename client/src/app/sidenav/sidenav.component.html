@@ -1,0 +1,43 @@
+@if (authService.isLoggedIn()) {
+  <div class="sidebar-header p-3">
+    <img src="assets/logo.png" alt="Web Push Craft Logo" class="sidebar-logo"/>
+  </div>
+  <mat-nav-list>
+    <a mat-list-item routerLink="/dashboard" class="text-white">
+      <mat-icon class="me-2">dashboard</mat-icon>
+      {{ 'sidenav.dashboard' | translate }}
+    </a>
+    <a mat-list-item routerLink="/templates" class="text-white">
+      <mat-icon class="me-2">description</mat-icon>
+      {{ 'sidenav.templates' | translate }}
+    </a>
+    <a mat-list-item routerLink="/creator" class="text-white">
+      <mat-icon class="me-2">add_circle</mat-icon>
+      {{ 'sidenav.creator' | translate }}
+    </a>
+    <a mat-list-item (click)="openGetStartedDialog()" class="text-white">
+      <mat-icon class="me-2">help_outline</mat-icon>
+      {{ 'sidenav.getStarted' | translate }}
+    </a>
+    <a mat-list-item (click)="logout()" class="text-white">
+      <mat-icon class="me-2">logout</mat-icon>
+      {{ 'sidenav.logout' | translate }}
+    </a>
+  </mat-nav-list>
+
+  <div class="language-switcher">
+    <button mat-button [matMenuTriggerFor]="languageMenu" class="language-button text-white">
+      <mat-icon class="me-2">language</mat-icon>
+      {{ 'sidenav.language' | translate }}: {{ getCurrentLanguage() | uppercase }}
+    </button>
+    <mat-menu #languageMenu="matMenu">
+      @for (lang of languages; track lang) {
+        <button mat-menu-item (click)="changeLanguage(lang)" [class.active]="getCurrentLanguage() === lang">
+          {{ lang | uppercase }}
+        </button>
+      }
+    </mat-menu>
+  </div>
+} @else {
+  <!-- Drawer is not visible when user is not logged in -->
+}

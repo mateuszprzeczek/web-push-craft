@@ -1,7 +1,10 @@
 import {Component, computed, effect, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import {ChartConfiguration, ChartData, ChartType} from 'chart.js';
 import {WebPushDashboardService} from "./services/web-push-dashboard.service";
 import {RestService} from "./services/rest.service";
@@ -29,7 +32,7 @@ Chart.register(
 @Component({
   selector: 'app-web-push-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, BaseChartDirective],
+  imports: [CommonModule, RouterLink, MatCardModule, MatIconModule, BaseChartDirective, TranslateModule],
   providers: [WebPushDashboardService, RestService],
   templateUrl: './web-push-dashboard.component.html',
   styleUrl: './web-push-dashboard.component.scss'

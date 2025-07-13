@@ -1,5 +1,11 @@
 <mat-card class="dashboard-card p-3">
-  <mat-card-title class="fs-3 mb-4">📊 Web Push Summary</mat-card-title>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <mat-card-title class="fs-3 mb-0">📊 Web Push Summary</mat-card-title>
+    <a routerLink="/creator" class="btn btn-primary">
+      <mat-icon class="me-1">add_circle</mat-icon>
+      {{ 'dashboard.createNew' | translate }}
+    </a>
+  </div>
 
   @if (dashboardService.stats()) {
     <div class="row g-3 mb-5">

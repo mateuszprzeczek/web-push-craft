@@ -1,7 +1,16 @@
-<div class="d-flex flex-column min-vh-100">
-  <main class="flex-grow-1 container py-4">
-    <router-outlet />
-  </main>
+<div class="app-container">
+  <mat-drawer-container class="sidenav-container" autosize>
+    <mat-drawer #drawer mode="side" [opened]="authService.isLoggedIn()" class="sidebar bg-dark text-white">
+      <app-sidenav></app-sidenav>
+    </mat-drawer>
 
-  <app-footer/>
+    <mat-drawer-content [class.with-sidebar]="authService.isLoggedIn()">
+      <div class="content-wrapper">
+        <main class="flex-grow-1 container py-4">
+          <router-outlet />
+        </main>
+        <app-footer/>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>

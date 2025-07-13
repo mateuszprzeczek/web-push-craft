@@ -1,0 +1,129 @@
+<div class="creator-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">{{ 'creator.title' | translate }}</h1>
+    <a routerLink="/templates" class="btn btn-outline-secondary">
+      <mat-icon class="me-1">arrow_back</mat-icon>
+      {{ 'creator.backToTemplates' | translate }}
+    </a>
+  </div>
+
+  <mat-card class="creator-content">
+    <p class="mb-4">{{ 'creator.description' | translate }}</p>
+
+    <form [formGroup]="templateForm" (ngSubmit)="saveTemplate()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'creator.form.name' | translate }}</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="templateForm.get('name')?.hasError('required')">
+              {{ 'creator.form.nameRequired' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <h3 class="mt-4 mb-3">{{ 'creator.form.notificationDetails' | translate }}</h3>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'creator.form.title' | translate }}</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-error *ngIf="templateForm.get('title')?.hasError('required')">
+              {{ 'creator.form.titleRequired' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <div
+            class="drop-zone"
+            [class.active]="isDraggingIcon"
+            (dragover)="onDragOverIcon($event)"
+            (dragleave)="onDragLeaveIcon($event)"
+            (drop)="onDropIcon($event)">
+            <mat-form-field class="w-100">
+              <mat-label>{{ 'creator.form.icon' | translate }}</mat-label>
+              <input matInput formControlName="icon" placeholder="https://example.com/icon.png">
+              <mat-hint>{{ 'creator.form.iconHint' | translate }}</mat-hint>
+            </mat-form-field>
+            <div class="drop-zone-overlay">
+              <mat-icon>cloud_upload</mat-icon>
+              <span>{{ 'creator.form.dropIconHere' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 mb-3">
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'creator.form.body' | translate }}</mat-label>
+            <textarea matInput formControlName="body" rows="3" required></textarea>
+            <mat-error *ngIf="templateForm.get('body')?.hasError('required')">
+              {{ 'creator.form.bodyRequired' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'creator.form.actionUrl' | translate }}</mat-label>
+            <input matInput formControlName="actionUrl" placeholder="https://example.com/action">
+            <mat-hint>{{ 'creator.form.actionUrlHint' | translate }}</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'creator.form.badge' | translate }}</mat-label>
+            <input matInput formControlName="badge" placeholder="https://example.com/badge.png">
+            <mat-hint>{{ 'creator.form.badgeHint' | translate }}</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <div
+            class="drop-zone"
+            [class.active]="isDraggingImage"
+            (dragover)="onDragOverImage($event)"
+            (dragleave)="onDragLeaveImage($event)"
+            (drop)="onDropImage($event)">
+            <mat-form-field class="w-100">
+              <mat-label>{{ 'creator.form.image' | translate }}</mat-label>
+              <input matInput formControlName="image" placeholder="https://example.com/image.jpg">
+              <mat-hint>{{ 'creator.form.imageHint' | translate }}</mat-hint>
+            </mat-form-field>
+            <div class="drop-zone-overlay">
+              <mat-icon>cloud_upload</mat-icon>
+              <span>{{ 'creator.form.dropImageHere' | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'creator.form.tag' | translate }}</mat-label>
+            <input matInput formControlName="tag">
+            <mat-hint>{{ 'creator.form.tagHint' | translate }}</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button type="button" mat-button routerLink="/templates" class="me-2">
+          {{ 'creator.form.cancel' | translate }}
+        </button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="isSubmitting">
+          <mat-icon class="me-1">save</mat-icon>
+          {{ 'creator.form.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

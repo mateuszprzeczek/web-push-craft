@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { doc, getFirestore, setDoc, getDoc, updateDoc, serverTimestamp, increment } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB7MMYUhj0dj_XSFhycKvLhanfCmpa86KY",
@@ -12,12 +13,20 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
+const firestore = getFirestore(app);
+const db = getFirestore(app);
 
-export async function initPush(siteId: string) {
+function getUuidFromScriptTag(): string | null {
+    const scriptTag = document.querySelector<HTMLScriptElement>('script[data-id="wb-craft"]');
+    return scriptTag?.dataset.uuid || null;
+}
+
+export async function initPush() {
+    let uuid = getUuidFromScriptTag() || 'demo';
+
     try {
         const permission = await Notification.requestPermission();
         if (permission !== "granted") {
-            console.warn("Brak zgody na powiadomienia");
             return;
         }
 
@@ -28,16 +37,70 @@ export async function initPush(siteId: string) {
             serviceWorkerRegistration: registration,
         });
 
-        await fetch("http://localhost:3000/subscribe", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token, siteId }),
-        });
+        const statsRef = doc(db, "stats", uuid);
 
-        console.log("Token zapisany:", token);
+        await setDoc(
+            statsRef,
+            {
+                summary: {
+                    totalSubscriptions: increment(1),
+                    lastUpdated: serverTimestamp(),
+                },
+            },
+            { merge: true }
+        );
+
+        console.log("Subscription recorded for UUID:", uuid, "Token:", token);
     } catch (err) {
-        console.error("Błąd przy rejestracji:", err);
+        console.error("Push registration error:", err);
     }
 }
 
-initPush("site-abc");
+async function updateStat(uuid: string, field: string) {
+    if (!uuid || !field) return;
+
+    const dayIndex = new Date().getDay(); // 0 = Sun
+    const chartIndex = (dayIndex + 6) % 7;
+
+    const ref = doc(firestore, "stats", uuid);
+    const snapshot = await getDoc(ref);
+    if (!snapshot.exists()) return;
+
+    const updates = {
+        [`summary.total${capitalize(field)}`]: increment(1),
+        [`${field}.data.${chartIndex}`]: increment(1),
+    };
+
+    await updateDoc(ref, updates);
+}
+
+function capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Obsługa wiadomości w foregroundzie
+onMessage(messaging, async (payload) => {
+    console.log("Web Push received in foreground:", payload);
+
+    if (!payload?.notification || !payload?.data) return;
+
+    const { title, body, icon } = payload.notification;
+    const data = payload.data;
+    const uuid = data.uuid;
+    const url = data.url || "/";
+
+    const notification = new Notification(title || 'test', {
+        body,
+        icon,
+        data,
+    });
+
+    await updateStat(uuid, "displays");
+
+    notification.onclick = async () => {
+        await updateStat(uuid, "clicks");
+        window.open(url, "_blank");
+    };
+});
+
+initPush();

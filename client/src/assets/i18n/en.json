@@ -1,0 +1,78 @@
+{
+  "sidenav": {
+    "dashboard": "Dashboard",
+    "templates": "Templates",
+    "creator": "Creator",
+    "getStarted": "Get Started",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "templates": {
+    "title": "Templates",
+    "coming_soon": "Templates will be available soon.",
+    "createNew": "Create New"
+  },
+  "dashboard": {
+    "createNew": "Create New"
+  },
+  "creator": {
+    "title": "Notification Creator",
+    "description": "Create a new Web Push notification using the creator.",
+    "backToTemplates": "Back to Templates",
+    "saveSuccess": "Template saved successfully",
+    "saveError": "Error saving template",
+    "form": {
+      "name": "Template Name",
+      "nameRequired": "Template name is required",
+      "notificationDetails": "Notification Details",
+      "title": "Notification Title",
+      "titleRequired": "Notification title is required",
+      "body": "Notification Message",
+      "bodyRequired": "Notification message is required",
+      "icon": "Icon URL",
+      "iconHint": "URL to the notification icon",
+      "dropIconHere": "Drop icon image here",
+      "actionUrl": "Action URL",
+      "actionUrlHint": "URL to open when notification is clicked",
+      "badge": "Badge URL",
+      "badgeHint": "URL to the notification badge",
+      "image": "Image URL",
+      "imageHint": "URL to the notification image",
+      "dropImageHere": "Drop image here",
+      "tag": "Tag",
+      "tagHint": "Tag to group notifications",
+      "save": "Save Template",
+      "cancel": "Cancel"
+    }
+  },
+  "home": {
+    "welcome": "Welcome to Web Push Craft",
+    "subtitle": "Create, test, and manage your Web Push notifications with ease.",
+    "login": "Log In",
+    "register": "Register",
+    "try_demo": "Try Demo"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "contact": "Contact"
+  },
+  "common": {
+    "close": "Close"
+  },
+  "getStarted": {
+    "title": "Get Started with Web Push Craft",
+    "description": "To use the Web Push Craft platform, you need to add the following to your website:",
+    "step1": {
+      "title": "Step 1: Add the script to your website",
+      "description": "Add the following script to the head section of your website:"
+    },
+    "step2": {
+      "title": "Step 2: Add the service worker file",
+      "description": "Download the firebase-messaging-sw.js file and add it to the root directory of your website.",
+      "instruction": "This file is required to receive web push notifications."
+    },
+    "copyScript": "Copy script",
+    "downloadServiceWorker": "Download service worker file",
+    "close": "Close"
+  }
+}

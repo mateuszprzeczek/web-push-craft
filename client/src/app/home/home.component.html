@@ -2,12 +2,12 @@
   <div class="d-flex align-items-center mb-3 mb-md-0">
     <img src="assets/logo.png" alt="Web Push Craft Logo" class="home-logo me-2" />
   </div>
-  <h1 class="fs-1 text-light mb-3">Welcome to Web Push Craft</h1>
-  <p class="fs-5 text-light mb-4">Create, test, and manage your Web Push notifications with ease.</p>
+  <h1 class="fs-1 text-light mb-3">{{ 'home.welcome' | translate }}</h1>
+  <p class="fs-5 text-light mb-4">{{ 'home.subtitle' | translate }}</p>
 
   <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
-    <button mat-flat-button color="primary" [routerLink]="['/login']">Log In</button>
-    <button mat-stroked-button color="accent" [routerLink]="['/register']">Register</button>
-    <button mat-button color="warn" (click)="authService.loginAsGuest()">Try Demo</button>
+    <button mat-flat-button color="primary" [routerLink]="['/login']">{{ 'home.login' | translate }}</button>
+    <button mat-stroked-button color="accent" [routerLink]="['/register']">{{ 'home.register' | translate }}</button>
+    <button mat-button color="warn" (click)="authService.loginAsGuest()">{{ 'home.try_demo' | translate }}</button>
   </div>
 </div>

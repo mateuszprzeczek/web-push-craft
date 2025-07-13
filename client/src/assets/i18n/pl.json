@@ -1,0 +1,78 @@
+{
+  "sidenav": {
+    "dashboard": "Panel",
+    "templates": "Lista szablonów",
+    "creator": "Kreator",
+    "getStarted": "Jak zacząć",
+    "logout": "Wyloguj",
+    "language": "Język"
+  },
+  "templates": {
+    "title": "Lista szablonów",
+    "coming_soon": "Lista szablonów będzie dostępna wkrótce.",
+    "createNew": "Utwórz nowy"
+  },
+  "dashboard": {
+    "createNew": "Utwórz nowy"
+  },
+  "creator": {
+    "title": "Kreator powiadomień",
+    "description": "Utwórz nowe powiadomienie Web Push za pomocą kreatora.",
+    "backToTemplates": "Powrót do szablonów",
+    "saveSuccess": "Szablon został zapisany pomyślnie",
+    "saveError": "Błąd podczas zapisywania szablonu",
+    "form": {
+      "name": "Nazwa szablonu",
+      "nameRequired": "Nazwa szablonu jest wymagana",
+      "notificationDetails": "Szczegóły powiadomienia",
+      "title": "Tytuł powiadomienia",
+      "titleRequired": "Tytuł powiadomienia jest wymagany",
+      "body": "Treść powiadomienia",
+      "bodyRequired": "Treść powiadomienia jest wymagana",
+      "icon": "URL ikony",
+      "iconHint": "URL do ikony powiadomienia",
+      "dropIconHere": "Upuść ikonę tutaj",
+      "actionUrl": "URL akcji",
+      "actionUrlHint": "URL do otwarcia po kliknięciu w powiadomienie",
+      "badge": "URL odznaki",
+      "badgeHint": "URL do odznaki powiadomienia",
+      "image": "URL obrazu",
+      "imageHint": "URL do obrazu powiadomienia",
+      "dropImageHere": "Upuść obraz tutaj",
+      "tag": "Tag",
+      "tagHint": "Tag do grupowania powiadomień",
+      "save": "Zapisz szablon",
+      "cancel": "Anuluj"
+    }
+  },
+  "home": {
+    "welcome": "Witaj w Web Push Craft",
+    "subtitle": "Twórz, testuj i zarządzaj powiadomieniami Web Push z łatwością.",
+    "login": "Zaloguj się",
+    "register": "Zarejestruj się",
+    "try_demo": "Wypróbuj demo"
+  },
+  "footer": {
+    "privacy": "Prywatność",
+    "contact": "Kontakt"
+  },
+  "common": {
+    "close": "Zamknij"
+  },
+  "getStarted": {
+    "title": "Jak zacząć z Web Push Craft",
+    "description": "Aby korzystać z platformy Web Push Craft, musisz dodać następujące elementy do swojej strony:",
+    "step1": {
+      "title": "Krok 1: Dodaj skrypt do swojej strony",
+      "description": "Dodaj następujący skrypt do sekcji head swojej strony:"
+    },
+    "step2": {
+      "title": "Krok 2: Dodaj plik service worker",
+      "description": "Pobierz plik firebase-messaging-sw.js i dodaj go do głównego katalogu swojej strony.",
+      "instruction": "Ten plik jest niezbędny do odbierania powiadomień web-push."
+    },
+    "copyScript": "Kopiuj skrypt",
+    "downloadServiceWorker": "Pobierz plik service workera",
+    "close": "Zamknij"
+  }
+}
