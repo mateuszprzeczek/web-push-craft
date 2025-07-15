@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { collection, doc, setDoc, updateDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc, getDocs } from 'firebase/firestore';
 import { firestore } from '../../../firebase/firebase.init';
 import { AuthService } from '../../auth/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -129,10 +129,8 @@ export class SendService {
    * @returns A promise that resolves when the notification is sent
    */
   async sendViaCloudFunction(template: PushNotificationTemplate, token: string): Promise<void> {
-    // Get the URL for the Cloud Function
-    const region = 'europe-west1'; // Default region
-    const projectId = 'web-push-craft'; // Your project ID
-    const functionUrl = `https://${region}-${projectId}.cloudfunctions.net/sendNotification`;
+    // URL for the Cloud Function
+    const functionUrl = 'https://sendnotification-fqnqpm4iyq-uc.a.run.app';
 
     try {
       const response = await fetch(functionUrl, {
@@ -151,7 +149,7 @@ export class SendService {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error response from Cloud Function:', errorData);
-        throw new Error(errorData.error || 'Failed to send notification');
+        return Promise.reject(new Error(errorData.error || 'Failed to send notification'));
       }
 
       const result = await response.json();
