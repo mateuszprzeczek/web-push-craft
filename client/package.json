@@ -5,6 +5,9 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
+    "buildProd": "ng build --configuration production",
+    "deployHosting": "firebase deploy --only hosting",
+    "deployFunctions": "firebase deploy --only functions",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -17,7 +17,7 @@ export const sendNotification = functions.https.onRequest((req, res) => {
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.set(
-        "Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
+      "Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
     res.set("Access-Control-Max-Age", "86400");
     res.status(204).send("");
     return;
