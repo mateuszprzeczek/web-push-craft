@@ -40,11 +40,12 @@ export class SendService {
       throw new Error(this.translate.instant('send.errors.noSubscribers'));
     }
 
-    // Create a copy of the template with updated status
+    // Create a copy of the template with updated status and uid
     const notificationToSend = {
       ...template,
       status: 'sent' as const,
-      sentAt: new Date().toISOString()
+      sentAt: new Date().toISOString(),
+      uuid: uid // Add uid to the notification payload for tracking
     };
 
     // Save the notification to Firestore
@@ -83,11 +84,12 @@ export class SendService {
       throw new Error(this.translate.instant('send.errors.noSubscribers'));
     }
 
-    // Create a copy of the template with updated status and schedule time
+    // Create a copy of the template with updated status, schedule time, and uid
     const notificationToSchedule = {
       ...template,
       status: 'scheduled' as const,
-      scheduleTime: scheduledTime.toISOString()
+      scheduleTime: scheduledTime.toISOString(),
+      uid: uid // Add uid to the notification payload for tracking
     };
 
     // Save the notification to Firestore
@@ -130,30 +132,35 @@ export class SendService {
    */
   async sendViaCloudFunction(template: PushNotificationTemplate, token: string): Promise<void> {
     // URL for the Cloud Function
-    const functionUrl = 'https://sendnotification-fqnqpm4iyq-uc.a.run.app';
+    const functionUrl = 'https://sendnotification-fqnqpm4iyq-uc.a.run.app/';
 
     try {
-      await fetch(functionUrl, {
+      // Log the request body for debugging
+      const requestBody = {
+        data: {
+          token,
+          notification: template
+        }
+      };
+      console.log('Sending notification request:', JSON.stringify(requestBody));
+
+      const response = await fetch(functionUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Origin': window.location.origin,
-          'Access-Control-Request-Method': 'POST',
-          'Access-Control-Request-Headers': 'Content-Type, Authorization, Accept'
+          'Content-Type': 'application/json'
         },
-        mode: 'no-cors',
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          data: {
-            token,
-            notification: template
-          }
-        }),
+        mode: 'cors',
+        body: JSON.stringify(requestBody),
       });
 
-      // With 'no-cors' mode, we can't read the response body or check status
-      // The response is opaque, so we assume success if no exception is thrown
-      console.log('Notification sent via Cloud Function (opaque response)');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response from Cloud Function:', errorData);
+        return Promise.reject(new Error(errorData.error || 'Failed to send notification'));
+      }
+
+      const result = await response.json();
+      console.log('Notification sent via Cloud Function:', result);
     } catch (err) {
       console.error('Failed to send notification via Cloud Function:', err);
       throw err;
