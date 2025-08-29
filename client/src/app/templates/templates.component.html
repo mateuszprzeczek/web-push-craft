@@ -1,7 +1,7 @@
 <mat-card class="templates-card p-3">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <mat-card-title class="fs-3 mb-0">📝 {{ 'templates.title' | translate }}</mat-card-title>
-    @if (templates.length > 0) {
+    @if (templates().length > 0) {
       <a routerLink="/creator" class="btn btn-primary">
         <mat-icon class="me-1">add_circle</mat-icon>
         {{ 'templates.createNew' | translate }}
@@ -9,8 +9,8 @@
     }
   </div>
 
-  @if (templates.length > 0) {
-    @for (template of templates; track template.id) {
+  @if (templates().length > 0) {
+    @for (template of templates(); track template.id) {
       <div class="template-item mb-3 p-3 border rounded">
         <div class="d-flex justify-content-between align-items-start">
           <div>

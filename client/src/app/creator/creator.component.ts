@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -57,31 +57,29 @@ export class CreatorComponent implements OnInit {
     tag: ['']
   });
 
-  isSubmitting = false;
-  isDraggingIcon = false;
-  isDraggingImage = false;
+  isSubmitting = signal(false);
+  isDraggingIcon = signal(false);
+  isDraggingImage = signal(false);
 
-  // Track if buttons are visible
-  isButton1Visible = false;
-  isButton2Visible = false;
+  isButton1Visible = signal(false);
+  isButton2Visible = signal(false);
 
-  // Handle drag events for icon
   onDragOverIcon(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.isDraggingIcon = true;
+    this.isDraggingIcon.set(true);
   }
 
   onDragLeaveIcon(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.isDraggingIcon = false;
+    this.isDraggingIcon.set(false);
   }
 
   onDropIcon(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.isDraggingIcon = false;
+    this.isDraggingIcon.set(false);
 
     if (event.dataTransfer?.files.length) {
       const file = event.dataTransfer.files[0];
@@ -91,23 +89,22 @@ export class CreatorComponent implements OnInit {
     }
   }
 
-  // Handle drag events for image
   onDragOverImage(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.isDraggingImage = true;
+    this.isDraggingImage.set(true);
   }
 
   onDragLeaveImage(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.isDraggingImage = false;
+    this.isDraggingImage.set(false);
   }
 
   onDropImage(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.isDraggingImage = false;
+    this.isDraggingImage.set(false);
 
     if (event.dataTransfer?.files.length) {
       const file = event.dataTransfer.files[0];
@@ -132,7 +129,7 @@ export class CreatorComponent implements OnInit {
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
     try {
       const templateId = uuidv4();
@@ -169,7 +166,6 @@ export class CreatorComponent implements OnInit {
 
       const uid = this.authService.userUid();
 
-      console.log('this.authService.userUid()', this.authService.userUid())
       if (!uid) throw new Error('No UID found');
 
       await setDoc(doc(firestore, 'users', uid, 'templates', templateId), templateData);
@@ -189,7 +185,7 @@ export class CreatorComponent implements OnInit {
         { duration: 3000 }
       );
     } finally {
-      this.isSubmitting = false;
+      this.isSubmitting.set(false);
     }
   }
 
@@ -232,36 +228,33 @@ export class CreatorComponent implements OnInit {
 
   // Methods to handle adding and removing buttons
   addButton1() {
-    this.isButton1Visible = true;
+    this.isButton1Visible.set(true);
   }
 
   removeButton1() {
-    this.isButton1Visible = false;
+    this.isButton1Visible.set(false);
     this.templateForm.get('btn1Title')?.setValue('');
     this.templateForm.get('btn1Url')?.setValue('');
   }
 
   addButton2() {
-    this.isButton2Visible = true;
+    this.isButton2Visible.set(true);
   }
 
   removeButton2() {
-    this.isButton2Visible = false;
+    this.isButton2Visible.set(false);
     this.templateForm.get('btn2Title')?.setValue('');
     this.templateForm.get('btn2Url')?.setValue('');
   }
 
-  // Check if buttons have values to determine visibility on component initialization
   ngOnInit() {
     const btn1Title = this.templateForm.get('btn1Title')?.value;
     const btn1Url = this.templateForm.get('btn1Url')?.value;
     const btn2Title = this.templateForm.get('btn2Title')?.value;
     const btn2Url = this.templateForm.get('btn2Url')?.value;
 
-    this.isButton1Visible = !!(btn1Title || btn1Url);
-    this.isButton2Visible = !!(btn2Title || btn2Url);
+    this.isButton1Visible.set(!!(btn1Title || btn1Url));
+    this.isButton2Visible.set(!!(btn2Title || btn2Url));
 
-    // Log the userUid to confirm it's working
-    console.log('ngOnInit - this.authService.userUid():', this.authService.userUid());
   }
 }
