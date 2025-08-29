@@ -17,21 +17,16 @@ export class TemplatesService {
   private translate = inject(TranslateService);
 
   async loadTemplatesForCurrentUser(): Promise<Array<PushNotificationTemplate>> {
-    console.log('loadTemplatesForCurrentUser called');
     const uid = this.authService.userUid();
-    console.log('User UID:', uid);
     if (!uid) throw new Error(this.translate.instant('templates.errors.userNotLoggedIn'));
 
-    console.log('Firestore path:', `users/${uid}/templates`);
     const templatesRef = collection(firestore, 'users', uid, 'templates');
     const snapshot = await getDocs(templatesRef);
-    console.log('Snapshot size:', snapshot.size);
 
     const templates = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     } as PushNotificationTemplate));
-    console.log('Templates:', templates);
     return templates;
   }
 }

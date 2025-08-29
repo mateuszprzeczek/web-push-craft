@@ -24,12 +24,10 @@ export class AuthService {
 
     if (storedUid) {
       this._userUid.set(storedUid);
-      console.log('Constructor - Initialized _userUid from localStorage:', storedUid);
     }
 
     if (isLoggedIn) {
       this._isLoggedIn.set(true);
-      console.log('Constructor - Initialized _isLoggedIn from localStorage:', isLoggedIn);
     }
   }
 
@@ -37,13 +35,11 @@ export class AuthService {
     // If auth.currentUser exists, use its uid
     if (auth.currentUser?.uid) {
       const uid = auth.currentUser.uid;
-      console.log('userUid() - Using auth.currentUser.uid:', uid);
       return uid;
     }
 
     // Otherwise, return the value from the signal (which is initialized from localStorage)
     const uid = this._userUid();
-    console.log('userUid() - Using _userUid():', uid);
     return uid;
   }
 
@@ -65,7 +61,6 @@ export class AuthService {
 
       this._isLoggedIn.set(true);
       localStorage.setItem('isLoggedIn', 'true');
-      console.log("User registered successfully.");
       this.router.navigate(['/dashboard']);
     } catch (error) {
       console.error('Registration error:', error);
@@ -96,7 +91,6 @@ export class AuthService {
     this._userUid.set('demo');
     localStorage.setItem('userUid', 'demo');
 
-    console.log('this.userUid', this.userUid());
     void this.router.navigate(['/dashboard']);
   }
 

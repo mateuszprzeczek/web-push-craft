@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -15,8 +15,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SendService } from './services/send.service';
 import { TemplatesService } from '../templates/services/templates.service';
 import { PushNotification } from '../creator/model/interfaces/push-notification.interface';
+import { toSignal } from '@angular/core/rxjs-interop';
 
-// Extended interface that includes id and name fields
 interface PushNotificationTemplate extends PushNotification {
   id: string;
   name: string;
@@ -53,66 +53,52 @@ export class SendComponent implements OnInit {
   private sendService = inject(SendService);
   private templatesService = inject(TemplatesService);
 
-  template: PushNotificationTemplate | null = null;
-  isLoading = true;
-  isSubmitting = false;
-  showDatePicker = false;
+  template = signal<PushNotificationTemplate | null>(null);
+  isLoading = signal(true);
+  isSubmitting = signal(false);
 
-  // Subscriber count properties
-  subscriberCount = 0;
-  isLoadingSubscribers = false;
+  subscriberCount = signal(0);
+  isLoadingSubscribers = signal(false);
 
   sendForm: FormGroup = this.fb.group({
-    sendType: ['now'], // 'now' or 'schedule'
+    sendType: ['now'],
     scheduledTime: [null]
   });
 
+  sendType = toSignal(this.sendForm.get('sendType')!.valueChanges, { initialValue: this.sendForm.get('sendType')!.value });
+  showDatePicker = computed(() => this.sendType() === 'schedule');
+
   ngOnInit(): void {
-    console.log('SendComponent ngOnInit called');
-    console.log('Route params:', this.route.snapshot.paramMap);
     const templateId = this.route.snapshot.paramMap.get('id');
-    console.log('templateId:', templateId);
     if (!templateId) {
-      console.log('No templateId found, navigating to /templates');
       this.router.navigate(['/templates']);
       return;
     }
 
-    console.log('Loading template with ID:', templateId);
     this.loadTemplate(templateId);
 
-    // Get subscriber count
     this.loadSubscriberCount();
-
-    // Listen for changes to the sendType control
-    this.sendForm.get('sendType')?.valueChanges.subscribe(value => {
-      this.showDatePicker = value === 'schedule';
-    });
   }
 
-  /**
-   * Load the subscriber count
-   */
   async loadSubscriberCount(): Promise<void> {
-    this.isLoadingSubscribers = true;
+    this.isLoadingSubscribers.set(true);
     try {
-      this.subscriberCount = await this.sendService.getSubscriberCount();
+      const count = await this.sendService.getSubscriberCount();
+      this.subscriberCount.set(count);
     } catch (error) {
       console.error('Error loading subscriber count:', error);
     } finally {
-      this.isLoadingSubscribers = false;
+      this.isLoadingSubscribers.set(false);
     }
   }
 
-  /**
-   * Recalculate the subscriber count
-   */
   async recalculateSubscriberCount(): Promise<void> {
-    this.isLoadingSubscribers = true;
+    this.isLoadingSubscribers.set(true);
     try {
-      this.subscriberCount = await this.sendService.getSubscriberCount();
+      const count = await this.sendService.getSubscriberCount();
+      this.subscriberCount.set(count);
       this.snackBar.open(
-        this.translate.instant('send.subscribers.count', { count: this.subscriberCount }),
+        this.translate.instant('send.subscribers.count', { count: this.subscriberCount() }),
         this.translate.instant('common.close'),
         { duration: 3000 }
       );
@@ -124,19 +110,16 @@ export class SendComponent implements OnInit {
         { duration: 3000 }
       );
     } finally {
-      this.isLoadingSubscribers = false;
+      this.isLoadingSubscribers.set(false);
     }
   }
 
   private async loadTemplate(templateId: string): Promise<void> {
-    console.log('loadTemplate called with templateId:', templateId);
     try {
-      console.log('Loading templates for current user...');
       const templates = await this.templatesService.loadTemplatesForCurrentUser();
-      console.log('Templates loaded:', templates);
-      this.template = templates.find(t => t.id === templateId) || null;
-      console.log('Template found:', this.template);
-      this.isLoading = false;
+      const found = templates.find(t => t.id === templateId) || null;
+      this.template.set(found);
+      this.isLoading.set(false);
     } catch (error) {
       console.error('Error loading template:', error);
       this.snackBar.open(
@@ -144,15 +127,15 @@ export class SendComponent implements OnInit {
         this.translate.instant('common.close'),
         { duration: 3000 }
       );
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 
   async sendNotification(): Promise<void> {
-    if (!this.template) return;
+    const tmpl = this.template();
+    if (!tmpl) return;
 
-    // Check if there are subscribers
-    if (this.subscriberCount === 0) {
+    if (this.subscriberCount() === 0) {
       this.snackBar.open(
         this.translate.instant('send.errors.noSubscribers'),
         this.translate.instant('common.close'),
@@ -161,19 +144,19 @@ export class SendComponent implements OnInit {
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     const formValues = this.sendForm.value;
 
     try {
       if (formValues.sendType === 'now') {
-        await this.sendService.sendNotificationNow(this.template);
+        await this.sendService.sendNotificationNow(tmpl);
         this.snackBar.open(
           this.translate.instant('send.success'),
           this.translate.instant('common.close'),
           { duration: 3000 }
         );
       } else {
-        await this.sendService.scheduleNotification(this.template, formValues.scheduledTime);
+        await this.sendService.scheduleNotification(tmpl, formValues.scheduledTime);
         this.snackBar.open(
           this.translate.instant('send.scheduled'),
           this.translate.instant('common.close'),
@@ -184,7 +167,6 @@ export class SendComponent implements OnInit {
     } catch (error) {
       console.error('Error sending notification:', error);
 
-      // Check if it's a specific error
       const errorMessage = error instanceof Error ? error.message : this.translate.instant('send.error');
 
       this.snackBar.open(
@@ -193,7 +175,7 @@ export class SendComponent implements OnInit {
         { duration: 5000 }
       );
     } finally {
-      this.isSubmitting = false;
+      this.isSubmitting.set(false);
     }
   }
 }

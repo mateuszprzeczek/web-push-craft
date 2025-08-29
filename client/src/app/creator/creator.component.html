@@ -43,7 +43,7 @@
         <div class="col-md-6 mb-3">
           <div
             class="drop-zone"
-            [class.active]="isDraggingIcon"
+            [class.active]="isDraggingIcon()"
             (dragover)="onDragOverIcon($event)"
             (dragleave)="onDragLeaveIcon($event)"
             (drop)="onDropIcon($event)">
@@ -76,7 +76,7 @@
 
       <h3 class="mt-4 mb-3">{{ 'creator.form.notificationButtons' | translate }}</h3>
 
-      @if (isButton1Visible) {
+      @if (isButton1Visible()) {
         <div class="notification-button-group">
           <div class="button-title-container">
             <div class="button-title">{{ 'creator.form.button1Label' | translate }}</div>
@@ -109,7 +109,7 @@
         </div>
       }
 
-      @if (isButton2Visible) {
+      @if (isButton2Visible()) {
         <div class="notification-button-group">
           <div class="button-title-container">
             <div class="button-title">{{ 'creator.form.button2Label' | translate }}</div>
@@ -158,7 +158,7 @@
         <div class="col-md-6 mb-3">
           <div
             class="drop-zone"
-            [class.active]="isDraggingImage"
+            [class.active]="isDraggingImage()"
             (dragover)="onDragOverImage($event)"
             (dragleave)="onDragLeaveImage($event)"
             (drop)="onDropImage($event)">
@@ -187,7 +187,7 @@
         <button type="button" mat-button routerLink="/templates" class="me-2">
           {{ 'creator.form.cancel' | translate }}
         </button>
-        <button type="submit" mat-raised-button color="primary" [disabled]="isSubmitting">
+        <button type="submit" mat-raised-button color="primary" [disabled]="isSubmitting()">
           <mat-icon class="me-1">save</mat-icon>
           {{ 'creator.form.save' | translate }}
         </button>

@@ -71,10 +71,8 @@ export class WebPushDashboardComponent implements OnInit {
 
   ngOnInit() {
     const uid = this.authService.userUid();
-    console.log('WebPushDashboardComponent - ngOnInit - User UID:', uid);
 
     if (uid) {
-      console.log('WebPushDashboardComponent - Loading stats for UID:', uid);
       void this.dashboardService.loadStats(uid);
     } else {
       console.error('User not logged in or UUID not available');
